@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"goredis/repositories"
+	"goredis/services"
 
 	"github.com/redis/go-redis/v9"
 	"gorm.io/driver/postgres"
@@ -13,11 +14,15 @@ func main() {
 
 	db := initDatabase()
 	redisClient := initRedis()
+	// _ = redisClient
 
-	// productRepo := repositories.NewProductRepositoryDB(db) //ไม่มี redis
-	productRepo := repositories.NewProductRepositoryRedis(db, redisClient) //มี redis
+	productRepo := repositories.NewProductRepositoryDB(db) //ไม่มี redis
+	// productRepo := repositories.NewProductRepositoryRedis(db, redisClient) //มี redis
 
-	products, err := productRepo.GetProducts()
+	// productservice := services.NewCatalogService(productRepo)
+	productservice := services.NewCatalogServiceRedis(productRepo, redisClient)
+
+	products, err := productservice.GetProducts()
 	if err != nil {
 		fmt.Println(err)
 		return

@@ -26,7 +26,6 @@ func (r productRepositoryRedis) GetProducts() (products []product, err error) {
 	key := "repository::GetProducts"
 
 	//Redis Get
-
 	productsJson, err := r.redisClient.Get(context.Background(), key).Result()
 	if err == nil {
 		err = json.Unmarshal([]byte(productsJson), &products)
