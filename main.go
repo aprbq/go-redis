@@ -15,7 +15,7 @@ func main() {
 
 	db := initDatabase()
 	redisClient := initRedis()
-	_ = redisClient
+	// _ = redisClient
 
 	productRepo := repositories.NewProductRepositoryDB(db) //ไม่มี redis
 	// productRepo := repositories.NewProductRepositoryRedis(db, redisClient) //มี redis
