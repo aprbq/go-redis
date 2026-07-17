@@ -40,16 +40,11 @@ func (r productRepositoryRedis) GetProducts() (products []product, err error) {
 	if err != nil {
 		return nil, err
 	}
-	//Redis Sets
-	data, err := json.Marshal(products)
-	if err != nil {
-		return nil, err
+	//Redis Set (best-effort — cache เขียนไม่สำเร็จไม่ต้องทำให้ request พัง)
+	if data, err := json.Marshal(products); err == nil {
+		r.redisClient.Set(context.Background(), key, string(data), time.Second*10)
 	}
 
-	err = r.redisClient.Set(context.Background(), key, string(data), time.Second*10).Err()
-	if err != nil {
-		return nil, err
-	}
 	fmt.Println("from database")
 	return products, nil
 }
